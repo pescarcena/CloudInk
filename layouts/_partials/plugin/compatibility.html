@@ -1,0 +1,11 @@
+{{- $compatibility := .Site.Params.compatibility | default dict -}}
+{{- $cdn := .Scratch.Get "cdn" | default dict -}}
+{{- $fingerprint := .Scratch.Get "fingerprint" -}}
+
+{{- /* Polyfill.io - REMOVED: domain was compromised in 2024 and is no longer safe */ -}}
+
+{{- /* object-fit-images */ -}}
+{{- if $compatibility.objectFit -}}
+    {{- $source := $cdn.objectFitImagesJS | default "lib/object-fit-images/ofi.min.js" -}}
+    {{- dict "Source" $source "Fingerprint" $fingerprint | dict "Scratch" .Scratch "Data" | partial "scratch/script.html" -}}
+{{- end -}}

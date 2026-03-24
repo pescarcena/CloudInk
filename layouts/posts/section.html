@@ -1,0 +1,66 @@
+{{- define "title" }}
+    {{- .Params.Title | default (T .Section) | default .Section | dict "Some" | T "allSome" }} - {{ .Site.Title -}}
+{{- end -}}
+
+{{- define "content" -}}
+    {{- $params := .Scratch.Get "params" -}}
+    {{- $profile := .Site.Params.home.profile -}}
+
+    <div class="page home" data-home="posts">
+        {{- /* Profile */ -}}
+        {{- if ne $profile.enable false -}}
+            {{- partial "home/profile.html" . -}}
+        {{- end -}}
+
+        {{- /* Posts */ -}}
+        {{- if .Pages -}}
+            {{- $pages := .Pages -}}
+            {{- with .Site.Params.home.posts.paginate | default .Site.Params.paginate -}}
+                {{- $pages = $.Paginate $pages . -}}
+            {{- else -}}
+                {{- $pages = .Paginate $pages -}}
+            {{- end -}}
+
+            {{- /* View toggle */ -}}
+            <div class="posts-view-toggle">
+                <button class="view-btn active" data-view="list" title="List view">
+                    <i class="fas fa-list"></i>
+                </button>
+                <button class="view-btn" data-view="grid" title="Grid view">
+                    <i class="fas fa-th-large"></i>
+                </button>
+            </div>
+
+            <div class="posts-container" id="posts-container">
+                {{- range $pages.Pages -}}
+                    {{- .Render "summary" -}}
+                {{- end -}}
+            </div>
+            {{- partial "paginator.html" . -}}
+        {{- end -}}
+    </div>
+
+    <script>
+        (function() {
+            var container = document.getElementById('posts-container');
+            var buttons = document.querySelectorAll('.view-btn');
+            var saved = localStorage.getItem('posts-view') || 'list';
+
+            function setView(view) {
+                container.className = 'posts-container posts-' + view;
+                buttons.forEach(function(btn) {
+                    btn.classList.toggle('active', btn.getAttribute('data-view') === view);
+                });
+                localStorage.setItem('posts-view', view);
+            }
+
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    setView(this.getAttribute('data-view'));
+                });
+            });
+
+            setView(saved);
+        })();
+    </script>
+{{- end -}}
