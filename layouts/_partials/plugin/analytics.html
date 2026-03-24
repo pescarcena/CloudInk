@@ -77,8 +77,13 @@
 
         if(views) {
             r.addEventListener('load', function() {
-                const count = JSON.parse(this.responseText);
-                views.innerHTML = `${count.count_unique} views on this page (powered by <a href="https://www.goatcounter.com/">Goat Counter</a>)`
+                var count = JSON.parse(this.responseText);
+                var el = document.getElementById("page-views-count");
+                if (el) {
+                    el.textContent = count.count_unique;
+                } else {
+                    views.textContent = count.count_unique + " views";
+                }
             })
 
             r.open('GET', 'https://{{ . }}.goatcounter.com/counter/' + encodeURIComponent(get_path()) + '.json')

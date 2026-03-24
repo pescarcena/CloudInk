@@ -488,6 +488,9 @@
     # Yandex Metrica
     [params.analytics.yandexMetrica]
       id = ""
+    # GoatCounter Analytics
+    [params.analytics.goatCounter]
+      code = ""
 
   # Cookie consent config
   [params.cookieconsent]
