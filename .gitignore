@@ -1,7 +1,9 @@
 # Hugo default output directory
 public/
+resources/_gen/
 /exampleSite/resources/
 /exampleSite/.hugo_build.lock
+.hugo_build.lock
 
 node_modules/
 build/
