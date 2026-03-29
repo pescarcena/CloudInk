@@ -573,19 +573,26 @@ class Theme {
             if (!$mermaidElements.length) return;
 
             mermaid.initialize({startOnLoad: false, theme: this.isDark ? 'dark' : 'neutral', securityLevel: 'loose'});
-            Util.forEach($mermaidElements, $mermaid => {
-                const definition = this.getMermaidDefinition($mermaid);
-                if (!definition) return;
-
+            const queue = Array.from($mermaidElements);
+            const self = this;
+            let i = 0;
+            function renderNext() {
+                if (i >= queue.length) return;
+                const $mermaid = queue[i++];
+                const definition = self.getMermaidDefinition($mermaid);
+                if (!definition) return renderNext();
                 mermaid
-                    .render('mermaid-svg-' + $mermaid.id, definition)
+                    .render('mermaid-svg-' + $mermaid.id + '-' + i, definition)
                     .then(({ svg }) => {
                         $mermaid.innerHTML = svg;
+                        renderNext();
                     })
                     .catch(err => {
                         console.error(err);
+                        renderNext();
                     });
-            });
+            }
+            renderNext();
         });
         this.switchThemeEventSet.add(this._mermaidOnSwitchTheme);
         this._mermaidOnSwitchTheme();
