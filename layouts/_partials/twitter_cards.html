@@ -1,0 +1,22 @@
+{{- $description := .Description | default .Site.Params.description -}}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ .Title }}" />
+<meta name="twitter:description" content="{{ $description }}" />
+
+{{- /* Resolve image: featuredImage > images[] > site default */ -}}
+{{- $image := "" -}}
+{{- with .Params.featuredImage -}}
+    {{- $image = . | absURL -}}
+{{- else -}}
+    {{- with .Params.images -}}
+        {{- $image = index . 0 | absURL -}}
+    {{- else -}}
+        {{- with $.Site.Params.images -}}
+            {{- $image = index . 0 | absURL -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+{{- with $image -}}
+    <meta name="twitter:image" content="{{ . }}" />
+{{- end -}}

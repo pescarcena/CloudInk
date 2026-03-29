@@ -34,6 +34,17 @@
     <link rel="feed" href="{{ .RelPermalink }}" type="application/rss+xml" title="{{ $.Site.Title }}">
 {{- end -}}
 
+{{- /* hreflang tags for multilingual SEO */ -}}
+{{- if hugo.IsMultilingual -}}
+    {{- if .IsTranslated -}}
+        {{- range .Translations -}}
+            <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}" />
+        {{- end -}}
+        <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}" />
+    {{- end -}}
+    <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+{{- end -}}
+
 {{- /* style.min.css */ -}}
 {{- $options := dict "Source" "css/style.scss" "Fingerprint" $fingerprint -}}
 {{- $toCSS := dict "targetPath" "css/style.min.css" "outputStyle" "compressed" "enableSourceMap" true -}}

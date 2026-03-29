@@ -20,7 +20,7 @@
 {{- if .IsHome -}}
     <script type="application/ld+json">
     {
-        "@context": "http://schema.org",
+        "@context": "https://schema.org",
         "@type": "WebSite",
         "url": "{{ .Permalink }}",
         {{- with .Site.LanguageCode -}}
@@ -66,7 +66,7 @@
 {{- else if .IsPage -}}
     <script type="application/ld+json">
     {
-        "@context": "http://schema.org",
+        "@context": "https://schema.org",
         "@type": "BlogPosting",
         "headline": {{ .Title | safeHTML }},
         "inLanguage": "{{ .Site.LanguageCode }}",
@@ -74,36 +74,14 @@
             "@type": "WebPage",
             "@id": "{{ .Permalink }}"
         },
-        {{- $images := $params.seo.images | default slice -}}
-        {{- if not $images -}}
-            {{- with .Resources.GetMatch "featured-image-preview" -}}
-                {{- $images = slice "featured-image-preview" -}}
-            {{- end -}}
-            {{- with .Resources.GetMatch "featured-image" -}}
-                {{- $images = slice "featured-image" -}}
+        {{- $image := .Params.featuredImage | default "" -}}
+        {{- if not $image -}}
+            {{- with .Site.Params.images -}}
+                {{- $image = index . 0 -}}
             {{- end -}}
         {{- end -}}
-        {{- with .Site.Params.seo.image -}}
-            {{- $images = $images | default (slice .) -}}
-        {{- end -}}
-        {{- with $images -}}
-            "image": [
-                {{- range $index, $value := . -}}
-                    {{- if gt $index 0 }},{{ end -}}
-                    {{- with dict "Path" $value "Resources" $.Resources | partial "function/resource.html" -}}
-                        {
-                            "@type": "ImageObject",
-                            "url": "{{ .Permalink }}",
-                            "width": {{ .Width }},
-                            "height": {{ .Height }}
-                        }
-                    {{- else -}}
-                        {{- with $value -}}
-                            "{{ . | absURL }}"
-                        {{- end -}}
-                    {{- end -}}
-                {{- end -}}
-            ],
+        {{- with $image -}}
+            "image": "{{ . | absURL }}",
         {{- end -}}
         "genre": "{{ .Type }}",
         {{- with .Params.tags -}}
@@ -122,24 +100,13 @@
         {{- with .Site.Copyright -}}
             "license": {{ . | safeHTML }},
         {{- end -}}
-        {{- $publisher := .Params.author | default .Site.Params.Author.name | default (T "author") | dict "name" -}}
-        {{- $publisher = $params.seo.publisher | default dict | merge $publisher -}}
         "publisher": {
             "@type": "Organization",
-            "name": {{ $publisher.name | safeHTML }}
-            {{- $logo := $publisher.logoUrl -}}
-            {{- with dict "Path" $logo "Resources" .Resources | partial "function/resource.html" -}}
-                ,"logo": {
-                    "@type": "ImageObject",
-                    "url": "{{ .Permalink }}",
-                    "width": {{ .Width }},
-                    "height": {{ .Height }}
-                }
-            {{- else -}}
-                {{- with $logo -}}
-                    ,"logo": "{{ . | absURL }}"
-                {{- end -}}
-            {{- end -}}
+            "name": {{ .Site.Title | safeHTML }},
+            "logo": {
+                "@type": "ImageObject",
+                "url": "{{ "/images/avatar.png" | absURL }}"
+            }
         },
         {{- with .Params.author | default .Site.Params.Author.name | default (T "author") -}}
             "author": {

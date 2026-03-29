@@ -17,7 +17,7 @@ other = "Artículos"
 
 # === Taxonomy ===
 [allSome]
-other = "Todas las {{ .Some }}"
+other = "Todos los {{ .Some }}"
 
 [tag]
 other = "Etiqueta"
@@ -39,7 +39,7 @@ other = "Más"
 
 # === partials/header.html ===
 [selectLanguage]
-other = "Selecciona el lenguage"
+other = "Seleccionar idioma"
 
 [switchTheme]
 other = "Cambia el tema"
