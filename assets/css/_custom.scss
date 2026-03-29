@@ -88,10 +88,13 @@ code, pre code {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+  overflow: hidden;
 
   .single.summary {
     margin: 0;
     padding-bottom: 0;
+    overflow: hidden;
+    min-width: 0;
 
     .featured-image-preview {
       margin: 0 0 0.5rem 0;
@@ -107,6 +110,16 @@ code, pre code {
 
     .content {
       font-size: 0.9rem;
+    }
+
+    .post-footer {
+      overflow: hidden;
+
+      .post-tags {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 
